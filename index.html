@@ -3,92 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام بلاغات المشتركين</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <title>نظام بلاغات المشتركين - تليجرام</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
-        h2 { text-align: center; color: #1a73e8; margin-top: 0; }
+        h2 { text-align: center; color: #0088cc; margin-top: 0; }
         .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        textarea { height: 100px; }
-        .warning { font-size: 0.8rem; color: #d93025; margin-top: 5px; font-weight: bold; }
-        button { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #1557b0; }
-        #successMsg { display: none; text-align: center; color: #1e7e34; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #0088cc; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; }
+        #successMsg { display: none; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="card" id="mainCard">
-    <h2>خدمة المشتركين</h2>
-    <form id="supportForm">
+    <h2>إرسال بلاغ فني</h2>
+    <form id="telegramForm">
         <div class="input-group">
             <label>نوع المشكلة</label>
             <select id="problem" required>
-                <option value="">-- اختر نوع المشكلة --</option>
-                <option value="انقطاع كامل">انقطاع كامل</option>
-                <option value="بطء إنترنت">بطء إنترنت</option>
-                <option value="إشارة ضعيفة">إشارة ضعيفة</option>
+                <option value="انقطاع">انقطاع</option>
+                <option value="بطء">بطء</option>
+                <option value="إشارة">إشارة</option>
             </select>
         </div>
-
         <div class="input-group">
             <label>الاسم الكريم</label>
-            <input type="text" id="name" placeholder="الاسم الثلاثي" required>
+            <input type="text" id="name" required>
         </div>
-
         <div class="input-group">
             <label>العنوان بالتفصيل</label>
-            <textarea id="address" placeholder="اذكر (شمال، قبلة، مشرق، مغرب). يمنع ذكر أسماء جيران." required></textarea>
-            
+            <textarea id="address" placeholder="الموقع بالتحديد يرجى عدم ذكر اسم جنب  بيت فلان يرجى ذكر الاتجاه" required></textarea>
         </div>
-
-        <button type="submit" id="btnSubmit">إرسال البلاغ</button>
+        <button type="submit" id="btnSubmit">إرسال الآن</button>
     </form>
 </div>
 
 <div class="card" id="successMsg">
-    <h1 style="font-size: 50px;">✅</h1>
-    <h3>تم استلام بياناتك بنجاح</h3>
-    <p>شكراً لك، سيتم توجيه الفني لموقعك بناءً على العنوان المذكور.</p>
-    <button onclick="location.reload()" style="background: #6c757d;">إرسال بلاغ آخر</button>
+    <h3>✅ تم الإرسال!</h3>
+    <p>شكراً لك، تم إشعار القسم الفني بطلبك.</p>
 </div>
 
 <script>
-    // --- تعليمات الربط ---
-    // 1. سجل في موقع emailjs.com مجاناً
-    // 2. اربط إيميلك (Gmail مثلاً)
-    // 3. ضع الـ Public Key الخاص بك هنا بدلاً من "sAr7qFTdsTUDTt1cm"
-    (function() {
-        emailjs.init("sAr7qFTdsTUDTt1cm"); 
-    })();
+    const TELEGRAM_TOKEN = '8690796831:AAHgM2c71K46ALDJKnb-ZvReFWxPk4ARi7E';
+    const CHAT_ID = '-5266421490';
 
-    document.getElementById('supportForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+    document.getElementById('telegramForm').addEventListener('submit', function(e) {
+        e.preventDefault();
         
         const btn = document.getElementById('btnSubmit');
         btn.innerText = "جاري الإرسال...";
         btn.disabled = true;
 
-        const data = {
-            from_name: document.getElementById('name').value,
-            problem_type: document.getElementById('problem').value,
-            address_details: document.getElementById('address').value,
-            date_time: new Date().toLocaleString('ar-EG')
-        };
+        const name = document.getElementById('name').value;
+        const problem = document.getElementById('problem').value;
+        const address = document.getElementById('address').value;
 
-        // إرسال البيانات (يجب إنشاء Template في EmailJS يحتوي على هذه المتغيرات)
-        emailjs.send("service_fs32v2e", "template_zb3i548", data)
-            .then(function() {
+        // تنسيق الرسالة التي ستصلك على تليجرام
+        const message = `🚨 *بلاغ جديد* 🚨\n\n👤 *الاسم:* ${name}\n🛠 *المشكلة:* ${problem}\n📍 *العنوان:* ${address}`;
+
+        const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+        
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        })
+        .then(response => {
+            if (response.ok) {
                 document.getElementById('mainCard').style.display = 'none';
                 document.getElementById('successMsg').style.display = 'block';
-            }, function(error) {
-                alert("عذراً، حدث خطأ في الإرسال. حاول مرة أخرى.");
-                btn.innerText = "إرسال البلاغ";
-                btn.disabled = false;
-            });
+            } else {
+                alert("خطأ في الإرسال، تأكد من البيانات.");
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
 </script>
 
