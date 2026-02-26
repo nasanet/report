@@ -3,194 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حملة منعمرها أبشري كفر عويد</title>
-    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>نظام بلاغات المشتركين</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #6c757d;
-            --light-bg: #f8f9fa;
-            --dark-text: #212529;
-            --border-color: #dee2e6;
-        }
-
-        body {
-            font-family: 'Scheherazade New', serif;
-            background-color: var(--light-bg);
-            color: var(--dark-text);
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        .container {
-            max-width: 960px;
-            margin: 30px auto;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .header {
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 50px 20px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 3em;
-            font-weight: 700;
-        }
-        .header p {
-            font-size: 1.2em;
-            margin-top: 10px;
-        }
-        .section {
-            padding: 40px 30px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .section:last-child {
-            border-bottom: none;
-        }
-        .section h2 {
-            color: var(--primary-color);
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-        .section-intro {
-            font-size: 1.1em;
-            color: var(--secondary-color);
-            margin-bottom: 30px;
-        }
-        .stats-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .stat-item {
-            background-color: #e9ecef;
-            padding: 25px;
-            border-radius: 8px;
-            min-width: 220px;
-            flex: 1;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        }
-        .stat-item h3 {
-            margin: 0 0 10px;
-            color: var(--dark-text);
-        }
-        .stat-item p {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        .donation-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .qr-code {
-            width: 200px;
-            height: auto;
-            border: 5px solid var(--primary-color);
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .qr-text {
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        .whatsapp-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 25px;
-            width: 100%;
-        }
-        .whatsapp-btn {
-            background-color: #25d366;
-            color: #fff;
-            padding: 15px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 1.2em;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s ease;
-        }
-        .whatsapp-btn i {
-            margin-left: 10px;
-        }
-        .whatsapp-btn:hover {
-            background-color: #128c7e;
-        }
-        .footer {
-            background-color: var(--secondary-color);
-            color: #fff;
-            padding: 20px;
-            font-size: 0.9em;
-        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { text-align: center; color: #1a73e8; margin-top: 0; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        textarea { height: 100px; }
+        .warning { font-size: 0.8rem; color: #d93025; margin-top: 5px; font-weight: bold; }
+        button { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #1557b0; }
+        #successMsg { display: none; text-align: center; color: #1e7e34; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>حملة منعمرها أبشري كفر عويد</h1>
-            <p>معاً نبني مستقبل التعليم</p>
+<div class="card" id="mainCard">
+    <h2>خدمة المشتركين</h2>
+    <form id="supportForm">
+        <div class="input-group">
+            <label>نوع المشكلة</label>
+            <select id="problem" required>
+                <option value="">-- اختر نوع المشكلة --</option>
+                <option value="انقطاع كامل">انقطاع كامل</option>
+                <option value="بطء إنترنت">بطء إنترنت</option>
+                <option value="إشارة ضعيفة">إشارة ضعيفة</option>
+            </select>
         </div>
 
-        <div class="section">
-            <h2>تجديد الأمل... بناء الغد</h2>
-            <p class="section-intro">
-                استكمالاً لحملة "منعمرها"، وبهدف تعزيز الخدمات التعليمية في البلدة وترميم 8 مدارس ضمن المجمع التربوي، نعلن عن إطلاق حملة "منعمرها 2" لتنظيف وتأهيل المدارس لاستقبال أبنائنا.
-            </p>
-            <p><strong>التعليم حق لكل طفل.</strong></p>
-            <p><strong>الصدقة بعشر أمثالها.</strong></p>
+        <div class="input-group">
+            <label>الاسم الكريم</label>
+            <input type="text" id="name" placeholder="الاسم الثلاثي" required>
+        </div>
+
+        <div class="input-group">
+            <label>العنوان بالتفصيل</label>
+            <textarea id="address" placeholder="اذكر (شمال، قبلة، مشرق، مغرب). يمنع ذكر أسماء جيران." required></textarea>
             
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <h3>عدد الطلاب المستفيدين</h3>
-                    <p>3700 طالب</p>
-                </div>
-                <div class="stat-item">
-                    <h3>إحداث</h3>
-                    <p>8 مدارس</p>
-                </div>
-            </div>
         </div>
 
-        <div class="section donation-section">
-            <h2>للتبرع والمساهمة</h2>
-            <p class="section-intro">
-                يمكنكم التبرع عبر باركود شام كاش أو معرف الحساب.
-            </p>
-            
-            <img src="qr.png" alt="باركود شام كاش" class="qr-code">
-            <p class="qr-text">معرف الحساب: [49ccf47638e014251935af3f91e48a3e]</p>
+        <button type="submit" id="btnSubmit">إرسال البلاغ</button>
+    </form>
+</div>
 
-            <div class="whatsapp-buttons">
-                <h3>للتبرع والمساهمة من جميع أنحاء العالم</h3>
-                <a href="https://wa.me/905397718147" class="whatsapp-btn">
-                    +90 539 771 81 47
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-                <a href="https://wa.me/352681594281" class="whatsapp-btn">
-                    +352 681 594 281
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-            </div>
-        </div>
+<div class="card" id="successMsg">
+    <h1 style="font-size: 50px;">✅</h1>
+    <h3>تم استلام بياناتك بنجاح</h3>
+    <p>شكراً لك، سيتم توجيه الفني لموقعك بناءً على العنوان المذكور.</p>
+    <button onclick="location.reload()" style="background: #6c757d;">إرسال بلاغ آخر</button>
+</div>
 
-        <div class="footer">
-            <p>جميع الحقوق محفوظة &copy; 2025</p>
-        </div>
-    </div>
+<script>
+    // --- تعليمات الربط ---
+    // 1. سجل في موقع emailjs.com مجاناً
+    // 2. اربط إيميلك (Gmail مثلاً)
+    // 3. ضع الـ Public Key الخاص بك هنا بدلاً من "sAr7qFTdsTUDTt1cm"
+    (function() {
+        emailjs.init("YOUR_PUBLIC_KEY"); 
+    })();
+
+    document.getElementById('supportForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const btn = document.getElementById('btnSubmit');
+        btn.innerText = "جاري الإرسال...";
+        btn.disabled = true;
+
+        const data = {
+            from_name: document.getElementById('name').value,
+            problem_type: document.getElementById('problem').value,
+            address_details: document.getElementById('address').value,
+            date_time: new Date().toLocaleString('ar-EG')
+        };
+
+        // إرسال البيانات (يجب إنشاء Template في EmailJS يحتوي على هذه المتغيرات)
+        emailjs.send("service_fs32v2e", "template_zb3i548", data)
+            .then(function() {
+                document.getElementById('mainCard').style.display = 'none';
+                document.getElementById('successMsg').style.display = 'block';
+            }, function(error) {
+                alert("عذراً، حدث خطأ في الإرسال. حاول مرة أخرى.");
+                btn.innerText = "إرسال البلاغ";
+                btn.disabled = false;
+            });
+    });
+</script>
 
 </body>
 </html>
